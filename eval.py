@@ -8,8 +8,7 @@ import os
 import tensorflow as tf
 
 import loader
-import models
-import decoder
+import network
 
 tf.flags.DEFINE_string("save_path", None,
                        "Path to saved model.")
@@ -24,7 +23,7 @@ class Evaler:
             config = json.load(fid)
         config['model']['batch_size'] = batch_size
 
-        self.model = getattr(models, config['model']['model_class'])()
+        self.model = network.Model()
         self.graph = tf.Graph()
         self.session = sess = tf.Session(graph=self.graph)
         with self.graph.as_default():
@@ -54,15 +53,12 @@ def main(argv=None):
     data_loader = loader.Loader(config['data']['path'], batch_size,
                                 seed=config['data']['seed'])
 
-    lm = decoder.LM(data_loader, order=2)
     evaler = Evaler(FLAGS.save_path, batch_size=batch_size)
 
     corr = 0.0
     total = 0
     for inputs, labels in data_loader.batches(data_loader.val):
         probs = evaler.probs(inputs)
-        predictions = [decoder.beam_search(probs[i,...], lm)
-                         for i in range(batch_size)]
         predictions = np.vstack(predictions)
         corr += np.sum(predictions == np.vstack(labels))
         total += predictions.size
