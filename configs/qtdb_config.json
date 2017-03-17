@@ -1,0 +1,52 @@
+{
+    "seed" : 4337,
+
+    "data" : {
+        "path" : "/deep/group/med/qtdb",
+        "seed" : 2016
+    },
+
+    "optimizer" : {
+        "epochs" : 120,
+        "learning_rate" : 1e-2,
+        "momentum" : 0.9,
+        "decay_rate" : 0.8,
+        "decay_steps" : 2000
+    },
+
+    "model" : {
+        "dropout" : 0.2,
+        "model_class" : "DCNN",
+        "batch_size" : 8,
+        "conv_layers" : [
+            { "kernel_size" : 32,
+              "num_filters" : 16
+            },
+            { "kernel_size" : 32,
+              "num_filters" : 32
+            },
+            { "kernel_size" : 32,
+              "num_filters" : 16
+            },
+            { "kernel_size" : 32,
+              "num_filters" : 16
+            },
+            { "kernel_size" : 32,
+              "num_filters" : 16
+            },
+            { "kernel_size" : 32,
+              "num_filters" : 16
+            },
+            { "kernel_size" : 32,
+              "num_filters" : 16
+            },
+            { "kernel_size" : 32,
+              "num_filters" : 16
+            }
+       ]
+    },
+
+    "io" : {
+        "save_path" : "/deep/group/awni/ecg_models/qtdb/layers7"
+    }
+}
