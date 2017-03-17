@@ -13,7 +13,7 @@ import loader
 import network
 import utils
 
-tf.flags.DEFINE_string("config", "configs/qtdb_config.json",
+tf.flags.DEFINE_string("config", "configs/cinc_config.json",
                        "Configuration file for training.")
 FLAGS = tf.flags.FLAGS
 

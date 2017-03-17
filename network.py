@@ -23,9 +23,6 @@ class Model:
             acts = tfl.convolution2d(acts, num_outputs=num_filters,
                                      kernel_size=[kernel_size, 1],
                                      stride=stride)
-        # TODO, awni, this is needed to put the input into the
-        # frequency of the output (e.g. 200hz ->1hz)
-        assert stride_prod == 200, "Bad overall subsample factor."
 
         # Activations should emerge from the convolution with shape
         # [batch_size, time (subsampled), 1, num_channels]
