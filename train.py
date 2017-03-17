@@ -37,7 +37,7 @@ def run_validation(model, data_loader, session, summarizer):
     results = []
     for batch in data_loader.batches(data_loader.val):
         ops = [model.acc, model.loss]
-        feed_dict = model.feed_dict(batch[0], batch[1], test=True)
+        feed_dict = model.feed_dict(*batch)
         res = session.run(ops, feed_dict=feed_dict)
         results.append(res)
     acc, loss = np.mean(zip(*results), axis=1)
