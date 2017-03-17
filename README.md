@@ -25,8 +25,7 @@ export PATH=$PATH:/usr/local/cuda-8.0/bin:
 Run with
 ```
 gpu=0
-config=mitdb_config.json
-env CUDA_VISIBLE_DEVICES=$gpu python train.py --config=$config
+env CUDA_VISIBLE_DEVICES=$gpu python train.py
 ```
 
 To view results run:
