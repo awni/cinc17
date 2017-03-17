@@ -18,7 +18,7 @@ tf.flags.DEFINE_string("config", "configs/train.json",
 FLAGS = tf.flags.FLAGS
 
 def run_epoch(model, data_loader, session, summarizer):
-    summary_op = tf.merge_all_summaries()
+    summary_op = tf.summary.merge_all()
 
     for batch in data_loader.batches(data_loader.train):
         ops = [model.train_op, model.avg_loss,
@@ -76,7 +76,7 @@ def main(argv=None):
         model.init_train(config['optimizer'])
         tf.global_variables_initializer().run()
         saver = tf.train.Saver(tf.global_variables())
-        summarizer = tf.train.SummaryWriter(save_path, sess.graph)
+        summarizer = tf.summary.FileWriter(save_path, sess.graph)
         for e in range(epochs):
             start = time.time()
             run_epoch(model, data_loader, sess, summarizer)

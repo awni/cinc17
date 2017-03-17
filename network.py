@@ -47,7 +47,7 @@ class Model:
         self.loss =  tf.reduce_mean(losses)
 
         correct = tf.equal(tf.argmax(self.logits, 2), self.labels)
-        self.acc = tf.reduce_mean(correct)
+        self.acc = tf.reduce_mean(tf.cast(correct, tf.float32))
 
     def init_train(self, config):
 
@@ -65,8 +65,8 @@ class Model:
         self.avg_loss = ema.average(self.loss)
         self.avg_acc = ema.average(self.acc)
 
-        tf.scalar_summary("Loss", self.loss)
-        tf.scalar_summary("Accuracy", self.acc)
+        tf.summary.scalar("Loss", self.loss)
+        tf.summary.scalar("Accuracy", self.acc)
 
         self.it = tf.Variable(0, trainable=False, dtype=tf.int64)
 
