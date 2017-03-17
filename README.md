@@ -16,7 +16,7 @@ pip install -r path_to/requirements.txt
 
 ## Add below to .bashrc.user
 # for cuda 
-export LD_LIBRARY_PATH=/usr/local/cuda-8.0/lib:/usr/local/cuda-8.0/lib64
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda-8.0/lib64
 
 # for cuda nvcc
 export PATH=$PATH:/usr/local/cuda-8.0/bin:
