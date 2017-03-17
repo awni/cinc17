@@ -10,7 +10,7 @@ import tensorflow as tf
 import time
 
 import loader
-import models
+import network
 import utils
 
 tf.flags.DEFINE_string("config", "configs/qtdb_config.json",
@@ -59,7 +59,7 @@ def main(argv=None):
                                 config['model']['batch_size'],
                                 seed=config['data']['seed'])
 
-    model = getattr(models, config['model']['model_class'])()
+    model = network.Model()
 
     save_path = config['io']['save_path']
     if not os.path.exists(save_path):
