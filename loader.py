@@ -1,13 +1,10 @@
-from __future__ import division
-from __future__ import print_function
-
-import cPickle as pickle
+import pickle
 import collections
 import glob
 import numpy as np
 import os
 import random
-from data.qtdb.extract_data import load_all_data
+import scipy.io as sio
 
 class Loader:
     """
@@ -28,12 +25,11 @@ class Loader:
     normalizing the inputs.
     """
 
-    def __init__(self, data_path, batch_size, duration=30,
-                 val_frac=0.1, seed=None):
+    def __init__(self, data_path, batch_size,
+                 val_frac=0.2, seed=None):
         """
         :param data_path: path to the training and validation files
         :param batch_size: size of the minibatches to train on
-        :param duration: length in seconds of an ecg example
         :param val_frac: fraction of the dataset to use for validation
                          (held out by record)
         :param seed: seed the rng for shuffling data
@@ -47,7 +43,7 @@ class Loader:
 
         self.batch_size = batch_size
 
-        self._train, self._val = load_all_data(val_frac=0.2)
+        self._train, self._val = load_all_data(data_path, val_frac)
 
         random.shuffle(self._train)
         self.compute_mean_std()
@@ -56,25 +52,22 @@ class Loader:
 
         # Can use this to look at the distribution of classes
         # for each rhythm.
-        label_counter = collections.Counter(l for _, labels in self._train
-                                                 for l in labels)
+        label_counter = collections.Counter(l for _, l in self._train)
         print(label_counter)
 
         classes = sorted([c for c, _ in label_counter.most_common()])
-        self._int_to_class = dict(zip(xrange(len(classes)), classes))
-        self._class_to_int = {c : i for i, c in self._int_to_class.iteritems()}
+        self._int_to_class = dict(zip(range(len(classes)), classes))
+        self._class_to_int = {c : i for i, c in self._int_to_class.items()}
 
     def batches(self, data):
         """
         :param data: the raw dataset from e.g. `loader.train`
         :returns: Iterator to the minibatches. Each minibatch consists
                   of an (ecgs, labels) pair. The ecgs is a list of 1D
-                  numpy arrays, the labels is a list of integer labels
-                  for each ecg.
+                  numpy arrays, the labels is a list of integer labels.
         """
         inputs, labels = zip(*data)
-        labels = [[self._class_to_int[c] for c in label]
-                    for label in labels]
+        labels = [self._class_to_int[l] for l in labels]
         batch_size = self.batch_size
         data_size = len(labels)
         for i in range(0, data_size - batch_size + 1, batch_size):
@@ -113,10 +106,34 @@ class Loader:
         """ Returns the raw validation set. """
         return self._val
 
+def load_all_data(data_path, val_frac):
+    """
+    Returns tuple of training and validation sets. Each set
+    will contain a list of pairs of raw ecg and the
+    corresponding label.
+    """
+    label_file = os.path.join(data_path, "REFERENCE.csv")
+    # Load record ids + labels
+    with open(label_file, 'r') as fid:
+        records = [l.strip().split(",") for l in fid]
+    all_records = []
+
+    # Load raw ecg
+    for record, label in records:
+        ecg_file = os.path.join(data_path, record + ".mat")
+        ecg = sio.loadmat(ecg_file)['val'].squeeze()
+        all_records.append((ecg, label))
+
+    # Shuffle before train/val split
+    random.shuffle(all_records)
+    cut = int(len(all_records) * val_frac)
+    train, val = all_records[cut:], all_records[:cut]
+    return train, val
+
 
 if __name__ == "__main__":
     random.seed(2016)
-    data_path = "/deep/group/med/irhythm/ecg/clean_30sec_recs/batch1"
+    data_path = "/deep/group/med/alivecor/training2017/"
     batch_size = 32
     ldr = Loader(data_path, batch_size)
     print("Length of training set {}".format(len(ldr.train)))
