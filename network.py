@@ -36,17 +36,20 @@ class Model:
             else:
                 acts = _rnn(acts, rnn_dim, cell_type)
 
+        # Reduce the time-dimension to make a single prediction
+        acts = tf.reduce_sum(acts, axis=1)
+
         self.logits = tfl.fully_connected(acts, self.output_dim)
         self.probs = tf.nn.softmax(self.logits)
 
     def init_loss(self):
 
-        self.labels = tf.placeholder(tf.int64, shape=(self.batch_size, None))
+        self.labels = tf.placeholder(tf.int64, shape=(self.batch_size))
         losses = tf.nn.sparse_softmax_cross_entropy_with_logits(
                     logits=self.logits, labels=self.labels)
         self.loss =  tf.reduce_mean(losses)
 
-        correct = tf.equal(tf.argmax(self.logits, 2), self.labels)
+        correct = tf.equal(tf.argmax(self.logits, 1), self.labels)
         self.acc = tf.reduce_mean(tf.cast(correct, tf.float32))
 
     def init_train(self, config):
@@ -101,10 +104,19 @@ class Model:
         Returns:
             feed_dict (use with feed_dict kwarg in session.run)
         """
-        feed_dict = {self.inputs : np.vstack(inputs)}
+        feed_dict = {self.inputs : _zero_pad(inputs)}
         if labels is not None:
-            feed_dict[self.labels] = np.vstack(labels)
+            feed_dict[self.labels] = np.array(labels)
         return feed_dict
+
+def _zero_pad(inputs):
+    max_len = max(i.shape[0] for i in inputs)
+    batch_size = len(inputs)
+    input_mat = np.zeros((batch_size, max_len))
+    for e, i in enumerate(inputs):
+        input_mat[e,:i.shape[0]] = i
+    return input_mat
+
 
 def _rnn(acts, input_dim, cell_type, scope=None):
     if cell_type == 'gru':
