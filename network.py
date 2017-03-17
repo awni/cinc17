@@ -14,12 +14,10 @@ class Model:
         self.inputs = inputs = tf.placeholder(tf.float32, shape=(batch_size, None))
         acts = tf.reshape(inputs, (batch_size, -1, 1, 1))
 
-        stride_prod = 1
         for layer in config['conv_layers']:
             num_filters = layer['num_filters']
             kernel_size = layer['kernel_size']
             stride = layer['stride']
-            stride_prod *= stride
             acts = tfl.convolution2d(acts, num_outputs=num_filters,
                                      kernel_size=[kernel_size, 1],
                                      stride=stride)
@@ -42,19 +40,14 @@ class Model:
         self.probs = tf.nn.softmax(self.logits)
 
     def init_loss(self):
-        self.mask = tf.placeholder(tf.float32,
-                        shape=(self.batch_size, None))
-        total_inv = (1.0 / tf.reduce_sum(self.mask))
 
         self.labels = tf.placeholder(tf.int64, shape=(self.batch_size, None))
         losses = tf.nn.sparse_softmax_cross_entropy_with_logits(
-                    self.logits, self.labels)
-        losses = self.mask * losses
-        self.loss =  total_inv * tf.reduce_sum(losses)
+                    logits=self.logits, labels=self.labels)
+        self.loss =  tf.reduce_mean(losses)
 
         correct = tf.equal(tf.argmax(self.logits, 2), self.labels)
-        correct = self.mask * tf.cast(correct, tf.float32)
-        self.acc = total_inv * tf.reduce_sum(correct)
+        self.acc = tf.reduce_mean(correct)
 
     def init_train(self, config):
 
@@ -111,7 +104,6 @@ class Model:
         feed_dict = {self.inputs : np.vstack(inputs)}
         if labels is not None:
             feed_dict[self.labels] = np.vstack(labels)
-            feed_dict[self.mask] = np.ones((len(labels), len(labels[0])))
         return feed_dict
 
 def _rnn(acts, input_dim, cell_type, scope=None):
