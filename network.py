@@ -112,7 +112,8 @@ class Model:
 def _zero_pad(inputs):
     max_len = max(i.shape[0] for i in inputs)
     batch_size = len(inputs)
-    input_mat = np.zeros((batch_size, max_len))
+    input_mat = np.zeros((batch_size, max_len),
+                         dtype=np.float32)
     for e, i in enumerate(inputs):
         input_mat[e,:i.shape[0]] = i
     return input_mat

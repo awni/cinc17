@@ -8,7 +8,7 @@
 
     "optimizer" : {
         "epochs" : 120,
-        "learning_rate" : 1e-2,
+        "learning_rate" : 1e-3,
         "momentum" : 0.9,
         "decay_rate" : 0.8,
         "decay_steps" : 2000
@@ -16,21 +16,20 @@
 
     "model" : {
         "dropout" : 0.0,
-        "batch_size" : 8,
+        "batch_size" : 16,
         "conv_layers" : [
             { "kernel_size" : 32,
               "num_filters" : 16,
-              "stride" : 1
-
+              "stride" : 2
             },
             { "kernel_size" : 32,
               "num_filters" : 32,
-              "stride" : 1
+              "stride" : 2
             }
        ]
     },
 
     "io" : {
-        "save_path" : "<location_to_save>"
+        "save_path" : "saved_models"
     }
 }

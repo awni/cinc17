@@ -40,7 +40,7 @@ def run_validation(model, data_loader, session, summarizer):
         feed_dict = model.feed_dict(*batch)
         res = session.run(ops, feed_dict=feed_dict)
         results.append(res)
-    acc, loss = np.mean(zip(*results), axis=1)
+    acc, loss = np.mean(results, axis=0)
     summary = utils.make_summary("Dev Accuracy", float(acc))
     summarizer.add_summary(summary, global_step=it)
     summary = utils.make_summary("Dev Loss", float(loss))

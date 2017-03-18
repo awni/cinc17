@@ -49,7 +49,6 @@ class Loader:
 
         self._train, self._val = load_all_data(data_path, val_frac)
 
-        random.shuffle(self._train)
         self.compute_mean_std()
         self._train = [(self.normalize(ecg), l) for ecg, l in self._train]
         self._val = [(self.normalize(ecg), l) for ecg, l in self._val]
@@ -74,6 +73,7 @@ class Loader:
         labels = [self._class_to_int[l] for l in labels]
         batch_size = self.batch_size
         data_size = len(labels)
+
         for i in range(0, data_size - batch_size + 1, batch_size):
             batch_data = inputs[i:i + batch_size]
             batch_labels = labels[i:i + batch_size]
@@ -136,9 +136,9 @@ def load_all_data(data_path, val_frac):
 
 def main():
     parser = argparse.ArgumentParser(description="Data Loader")
-    parser.add_argument("-v", "--verbose", 
+    parser.add_argument("-v", "--verbose",
             default = False, action = "store_true")
-    parser.add_argument("-p", "--data_path", 
+    parser.add_argument("-p", "--data_path",
             default="/deep/group/med/alivecor/training2017/")
     parser.add_argument("-b", "--batch_size", default=32)
 
@@ -154,7 +154,7 @@ def main():
         logging.basicConfig(level=logging.DEBUG)
     else:
         logging.basicConfig(level=logging.INFO)
-    
+
     random.seed(2016)
     ldr = Loader(data_path, batch_size)
     logger.info("Length of training set {}".format(len(ldr.train)))
