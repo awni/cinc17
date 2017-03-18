@@ -1,10 +1,14 @@
-import pickle
+import argparse
 import collections
 import glob
+import logging
 import numpy as np
 import os
+import pickle
 import random
 import scipy.io as sio
+
+logger = logging.getLogger("Loader")
 
 class Loader:
     """
@@ -130,15 +134,32 @@ def load_all_data(data_path, val_frac):
     train, val = all_records[cut:], all_records[:cut]
     return train, val
 
+def main():
+    parser = argparse.ArgumentParser(description="Data Loader")
+    parser.add_argument("-v", "--verbose", 
+            default = False, action = "store_true")
+    parser.add_argument("-p", "--data_path", 
+            default="/deep/group/med/alivecor/training2017/")
+    parser.add_argument("-b", "--batch_size", default=32)
 
-if __name__ == "__main__":
+    parsed_arguments = parser.parse_args()
+    arguments = vars(parsed_arguments)
+
+    is_verbose   = arguments['verbose']
+    data_path    = arguments['data_path']
+    batch_size   = arguments['batch_size']
+
+
+    if is_verbose:
+        logging.basicConfig(level=logging.DEBUG)
+    else:
+        logging.basicConfig(level=logging.INFO)
+    
     random.seed(2016)
-    data_path = "/deep/group/med/alivecor/training2017/"
-    batch_size = 32
     ldr = Loader(data_path, batch_size)
-    print("Length of training set {}".format(len(ldr.train)))
-    print("Length of validation set {}".format(len(ldr.val)))
-    print("Output dimension {}".format(ldr.output_dim))
+    logger.info("Length of training set {}".format(len(ldr.train)))
+    logger.info("Length of validation set {}".format(len(ldr.val)))
+    logger.info("Output dimension {}".format(ldr.output_dim))
 
     # Run a few sanity checks.
     count = 0
@@ -149,3 +170,7 @@ if __name__ == "__main__":
         assert len(ecgs[0].shape) == 1, "ECG array should be 1D"
     assert count == len(ldr.train) // batch_size, \
             "Wrong number of batches."
+
+if __name__ == '__main__':
+    main()
+
