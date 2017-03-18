@@ -20,13 +20,11 @@ class Loader:
         data_path = <path_to_data>
         batch_size = 32
         ldr = Loader(data_path, batch_size)
-        for batch in ldr.batches(ldr.train):
+        for batch in ldr.train:
             run_sgd_on(batch)
         ```
 
-    At the moment we expect the location where the data is stored to have
-    train/ and val/ directories.  This class is also responsible for
-    normalizing the inputs.
+    This class is also responsible for normalizing the inputs.
     """
 
     def __init__(self, data_path, batch_size,
@@ -53,14 +51,14 @@ class Loader:
         self._train = [(self.normalize(ecg), l) for ecg, l in self._train]
         self._val = [(self.normalize(ecg), l) for ecg, l in self._val]
 
-        # Can use this to look at the distribution of classes
-        # for each rhythm.
         label_counter = collections.Counter(l for _, l in self._train)
-        print(label_counter)
 
         classes = sorted([c for c, _ in label_counter.most_common()])
         self._int_to_class = dict(zip(range(len(classes)), classes))
         self._class_to_int = {c : i for i, c in self._int_to_class.items()}
+
+        self._train = self.batches(self._train)
+        self._val = self.batches(self._val)
 
     def batches(self, data):
         """
@@ -69,15 +67,19 @@ class Loader:
                   of an (ecgs, labels) pair. The ecgs is a list of 1D
                   numpy arrays, the labels is a list of integer labels.
         """
+        # Sort by length
+        data = sorted(data, key = lambda x: x[0].shape[0])
+
         inputs, labels = zip(*data)
         labels = [self._class_to_int[l] for l in labels]
         batch_size = self.batch_size
         data_size = len(labels)
 
-        for i in range(0, data_size - batch_size + 1, batch_size):
-            batch_data = inputs[i:i + batch_size]
-            batch_labels = labels[i:i + batch_size]
-            yield (batch_data, batch_labels)
+        end = data_size - batch_size + 1
+        batches = [(inputs[i:i + batch_size], labels[i:i + batch_size])
+                   for i in range(0, end, batch_size)]
+        random.shuffle(batches)
+        return batches
 
     def normalize(self, example):
         """

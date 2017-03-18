@@ -18,20 +18,12 @@
         "dropout" : 0.0,
         "batch_size" : 32,
         "conv_layers" : [
-            { "kernel_size" : 32,
-              "num_filters" : 32,
+            { "kernel_size" : 64,
+              "num_filters" : 64,
               "stride" : 2
             },
-            { "kernel_size" : 32,
-              "num_filters" : 32,
-              "stride" : 2
-            },
-            { "kernel_size" : 32,
-              "num_filters" : 32,
-              "stride" : 2
-            },
-            { "kernel_size" : 32,
-              "num_filters" : 32,
+            { "kernel_size" : 64,
+              "num_filters" : 64,
               "stride" : 2
             }
        ]
