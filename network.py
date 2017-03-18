@@ -37,7 +37,7 @@ class Model:
                 acts = _rnn(acts, rnn_dim, cell_type)
 
         # Reduce the time-dimension to make a single prediction
-        acts = tf.reduce_sum(acts, axis=1)
+        acts = tf.reduce_mean(acts, axis=1)
 
         self.logits = tfl.fully_connected(acts, self.output_dim)
         self.probs = tf.nn.softmax(self.logits)
