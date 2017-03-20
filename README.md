@@ -32,5 +32,5 @@ To view results run:
 ```
 port=8888
 log_dir=<directory_of_saved_models>
-tensorboard --port $port --log_dir $log_dir
+tensorboard --port $port --logdir $log_dir
 ```
