@@ -112,6 +112,24 @@ class Loader:
         """ Returns the raw validation set. """
         return self._val
 
+    def __getstate__(self):
+        """
+        For pickling.
+        """
+        return (self.mean,
+                self.std,
+                self._int_to_class,
+                self._class_to_int)
+
+    def __setstate__(self, state):
+        """
+        For unpickling.
+        """
+        self.mean = state[0]
+        self.std = state[1]
+        self._int_to_class = state[2]
+        self._class_to_int = state[3]
+
 def load_all_data(data_path, val_frac):
     """
     Returns tuple of training and validation sets. Each set

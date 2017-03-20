@@ -5,6 +5,7 @@ from __future__ import print_function
 import json
 import numpy as np
 import os
+import pickle
 import random
 import tensorflow as tf
 import time
@@ -68,6 +69,8 @@ def main(argv=None):
     config['model']['output_dim'] = data_loader.output_dim
     with open(os.path.join(save_path, "config.json"), 'w') as fid:
         json.dump(config, fid)
+    with open(os.path.join(save_path, "loader.pkl"), 'wb') as fid:
+        pickle.dump(data_loader, fid)
 
     with tf.Graph().as_default(), tf.Session() as sess:
         tf.set_random_seed(config['seed'])
