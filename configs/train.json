@@ -25,11 +25,67 @@
             { "kernel_size" : 64,
               "num_filters" : 64,
               "stride" : 2
+            },
+            { "kernel_size" : 64,
+              "num_filters" : 64,
+              "stride" : 2
+            },
+            { "kernel_size" : 64,
+              "num_filters" : 64,
+              "stride" : 2
+            },
+            { "kernel_size" : 64,
+              "num_filters" : 64,
+              "stride" : 2
+            },
+            { "kernel_size" : 64,
+              "num_filters" : 64,
+              "stride" : 2
+            },
+            { "kernel_size" : 64,
+              "num_filters" : 64,
+              "stride" : 2
+            },
+            { "kernel_size" : 64,
+              "num_filters" : 64,
+              "stride" : 2
+            },
+            { "kernel_size" : 64,
+              "num_filters" : 64,
+              "stride" : 2
+            },
+            { "kernel_size" : 64,
+              "num_filters" : 64,
+              "stride" : 2
+            },
+            { "kernel_size" : 64,
+              "num_filters" : 64,
+              "stride" : 2
+            },
+            { "kernel_size" : 64,
+              "num_filters" : 64,
+              "stride" : 2
+            },
+            { "kernel_size" : 64,
+              "num_filters" : 64,
+              "stride" : 2
+            },
+            { "kernel_size" : 64,
+              "num_filters" : 64,
+              "stride" : 2
+            },
+            { "kernel_size" : 64,
+              "num_filters" : 64,
+              "stride" : 2
+            },
+            { "kernel_size" : 64,
+              "num_filters" : 64,
+              "stride" : 2
             }
        ]
     },
 
     "io" : {
-        "save_path" : "saved_models"
+        "save_path" : "saved_models/cnn16"
     }
 }
