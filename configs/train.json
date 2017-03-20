@@ -30,6 +30,6 @@
     },
 
     "io" : {
-        "save_path" : "saved_models"
+        "save_path" : "saved_models/model1"
     }
 }
