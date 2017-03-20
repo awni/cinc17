@@ -1,18 +1,12 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-
+import argparse
 import json
 import numpy as np
 import os
+import pickle
 import tensorflow as tf
 
 import loader
 import network
-
-tf.flags.DEFINE_string("save_path", None,
-                       "Path to saved model.")
-FLAGS = tf.flags.FLAGS
 
 class Evaler:
 
@@ -39,31 +33,28 @@ class Evaler:
 
     def predict(self, inputs):
         probs = self.probs(inputs)
-        return np.argmax(probs, axis=2)
+        return np.argmax(probs, axis=1)
 
-def main(argv=None):
-    assert FLAGS.save_path is not None, \
-        "Must provide the path to a model directory."
+def predict_record(record_id, model_path):
+    evaler = Evaler(model_path)
 
-    config_file = os.path.join(FLAGS.save_path, "config.json")
-    with open(config_file, 'r') as fid:
-        config = json.load(fid)
+    ldr_path = os.path.join(model_path, "loader.pkl")
+    with open(ldr_path, 'rb') as fid:
+        ldr = pickle.load(fid)
 
-    batch_size = 32
-    data_loader = loader.Loader(config['data']['path'], batch_size,
-                                seed=config['data']['seed'])
+    inputs = ldr.load_preprocess(record_id)
+    outputs = evaler.predict([inputs])
+    return ldr.int_to_class(outputs[0])
 
-    evaler = Evaler(FLAGS.save_path, batch_size=batch_size)
+def main():
+    parser = argparse.ArgumentParser(description="Evaluater Script")
+    parser.add_argument("model_path")
+    parser.add_argument("record")
 
-    corr = 0.0
-    total = 0
-    for inputs, labels in data_loader.batches(data_loader.val):
-        probs = evaler.probs(inputs)
-        predictions = np.vstack(predictions)
-        corr += np.sum(predictions == np.vstack(labels))
-        total += predictions.size
-    print("Number {}, Accuracy {:.3f}".format(total, corr / total))
-
+    args = parser.parse_args()
+    prediction = predict_record(args.record, args.model_path)
+    print(prediction)
 
 if __name__ == "__main__":
-    tf.app.run()
+    main()
+

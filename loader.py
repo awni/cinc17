@@ -94,8 +94,8 @@ class Loader:
         Estimates the mean and std over the training set.
         """
         all_dat = np.hstack(w for w, _ in self._train)
-        self.mean = np.mean(all_dat)
-        self.std = np.std(all_dat)
+        self.mean = np.mean(all_dat, dtype=np.float32)
+        self.std = np.std(all_dat, dtype=np.float32)
 
     @property
     def output_dim(self):
@@ -111,6 +111,14 @@ class Loader:
     def val(self):
         """ Returns the raw validation set. """
         return self._val
+
+    def load_preprocess(self, record_id):
+        ecg = load_ecg_mat(record_id + ".mat")
+        return self.normalize(ecg)
+
+    def int_to_class(self, label_int):
+        """ Convert integer label to class label. """
+        return self._int_to_class[label_int]
 
     def __getstate__(self):
         """
@@ -145,7 +153,7 @@ def load_all_data(data_path, val_frac):
     # Load raw ecg
     for record, label in records:
         ecg_file = os.path.join(data_path, record + ".mat")
-        ecg = sio.loadmat(ecg_file)['val'].squeeze()
+        ecg = load_ecg_mat(ecg_file)
         all_records.append((ecg, label))
 
     # Shuffle before train/val split
@@ -153,6 +161,9 @@ def load_all_data(data_path, val_frac):
     cut = int(len(all_records) * val_frac)
     train, val = all_records[cut:], all_records[:cut]
     return train, val
+
+def load_ecg_mat(ecg_file):
+    return sio.loadmat(ecg_file)['val'].squeeze()
 
 def main():
     parser = argparse.ArgumentParser(description="Data Loader")
