@@ -23,5 +23,5 @@ set -o pipefail
 
 RECORD=$1
 
-# TODO actually eval record and write to answers.txt
-echo $RECORD
+printf "$RECORD," >> answers.txt
+python eval.py . $RECORD >> answers.txt
