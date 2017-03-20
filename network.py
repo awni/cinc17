@@ -1,7 +1,6 @@
 
 import numpy as np
 import tensorflow as tf
-import tensorflow.contrib.layers as tfl
 
 MOMENTUM_INIT = 0.5
 
@@ -18,9 +17,9 @@ class Model:
             num_filters = layer['num_filters']
             kernel_size = layer['kernel_size']
             stride = layer['stride']
-            acts = tfl.convolution2d(acts, num_outputs=num_filters,
-                                     kernel_size=[kernel_size, 1],
-                                     stride=stride)
+            acts = tf.contrib.layers.convolution2d(acts, num_outputs=num_filters,
+                                                   kernel_size=[kernel_size, 1],
+                                                   stride=stride)
 
         # Activations should emerge from the convolution with shape
         # [batch_size, time (subsampled), 1, num_channels]
@@ -39,7 +38,7 @@ class Model:
         # Reduce the time-dimension to make a single prediction
         acts = tf.reduce_mean(acts, axis=1)
 
-        self.logits = tfl.fully_connected(acts, self.output_dim)
+        self.logits = tf.contrib.layers.fully_connected(acts, self.output_dim)
         self.probs = tf.nn.softmax(self.logits)
 
     def init_loss(self):
