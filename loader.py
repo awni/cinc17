@@ -94,8 +94,8 @@ class Loader:
         Estimates the mean and std over the training set.
         """
         all_dat = np.hstack(w for w, _ in self._train)
-        self.mean = np.mean(all_dat)
-        self.std = np.std(all_dat)
+        self.mean = np.mean(all_dat, dtype=np.float32)
+        self.std = np.std(all_dat, dtype=np.float32)
 
     @property
     def output_dim(self):
@@ -112,6 +112,32 @@ class Loader:
         """ Returns the raw validation set. """
         return self._val
 
+    def load_preprocess(self, record_id):
+        ecg = load_ecg_mat(record_id + ".mat")
+        return self.normalize(ecg)
+
+    def int_to_class(self, label_int):
+        """ Convert integer label to class label. """
+        return self._int_to_class[label_int]
+
+    def __getstate__(self):
+        """
+        For pickling.
+        """
+        return (self.mean,
+                self.std,
+                self._int_to_class,
+                self._class_to_int)
+
+    def __setstate__(self, state):
+        """
+        For unpickling.
+        """
+        self.mean = state[0]
+        self.std = state[1]
+        self._int_to_class = state[2]
+        self._class_to_int = state[3]
+
 def load_all_data(data_path, val_frac):
     """
     Returns tuple of training and validation sets. Each set
@@ -127,7 +153,7 @@ def load_all_data(data_path, val_frac):
     # Load raw ecg
     for record, label in records:
         ecg_file = os.path.join(data_path, record + ".mat")
-        ecg = sio.loadmat(ecg_file)['val'].squeeze()
+        ecg = load_ecg_mat(ecg_file)
         all_records.append((ecg, label))
 
     # Shuffle before train/val split
@@ -135,6 +161,9 @@ def load_all_data(data_path, val_frac):
     cut = int(len(all_records) * val_frac)
     train, val = all_records[cut:], all_records[:cut]
     return train, val
+
+def load_ecg_mat(ecg_file):
+    return sio.loadmat(ecg_file)['val'].squeeze()
 
 def main():
     parser = argparse.ArgumentParser(description="Data Loader")
