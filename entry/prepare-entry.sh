@@ -38,7 +38,7 @@ for r in `cat $validation/RECORDS`; do
 done
 
 ## Make zip
-cd ..
+rm -r __pycache__
 zip -r entry.zip entry
 
 ## Cleanup
