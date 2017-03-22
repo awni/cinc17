@@ -2,6 +2,7 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+import argparse
 import json
 import numpy as np
 import os
@@ -14,8 +15,8 @@ import loader
 import network
 import utils
 
-tf.flags.DEFINE_string("config", "configs/train.json",
-                       "Configuration file for training.")
+#tf.flags.DEFINE_string("config", "configs/train.json",
+#                       "Configuration file for training.")
 FLAGS = tf.flags.FLAGS
 
 def run_epoch(model, data_loader, session, summarizer):
@@ -50,8 +51,19 @@ def run_validation(model, data_loader, session, summarizer):
     print(msg.format(loss, acc))
 
 def main(argv=None):
+    parser = argparse.ArgumentParser(description="Train model")
+    parser.add_argument("-v", "--verbose",
+            default = False, action = "store_true")
+    parser.add_argument("-c", "--config_file",
+            default="configs/test.json")
 
-    with open(FLAGS.config) as fid:
+    parsed_arguments = parser.parse_args()
+    arguments = vars(parsed_arguments)
+
+    is_verbose   = arguments['verbose']
+    config_file  = arguments['config_file']
+
+    with open(config_file) as fid:
         config = json.load(fid)
 
     random.seed(config['seed'])
