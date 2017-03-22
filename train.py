@@ -15,10 +15,6 @@ import loader
 import network
 import utils
 
-#tf.flags.DEFINE_string("config", "configs/train.json",
-#                       "Configuration file for training.")
-FLAGS = tf.flags.FLAGS
-
 def run_epoch(model, data_loader, session, summarizer):
     summary_op = tf.summary.merge_all()
 
@@ -53,7 +49,7 @@ def run_validation(model, data_loader, session, summarizer):
 def main(argv=None):
     parser = argparse.ArgumentParser(description="Train model")
     parser.add_argument("-v", "--verbose",
-            default = False, action = "store_true")
+            default=False, action="store_true")
     parser.add_argument("-c", "--config_file",
             default="configs/test.json")
 
@@ -100,4 +96,4 @@ def main(argv=None):
             run_validation(model, data_loader, sess, summarizer)
 
 if __name__ == '__main__':
-    tf.app.run()
+    main()
