@@ -98,6 +98,11 @@ class Loader:
         self.std = np.std(all_dat, dtype=np.float32)
 
     @property
+    def classes(self):
+        return [self._int_to_class[i]
+                for i in range(self.output_dim)]
+
+    @property
     def output_dim(self):
         """ Returns number of output classes. """
         return len(self._int_to_class)

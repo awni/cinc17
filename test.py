@@ -5,7 +5,6 @@ import os
 import pickle
 import tensorflow as tf
 
-import loader
 import network
 
 class Evaler:
