@@ -15,10 +15,10 @@ class Model:
 
         for layer in config['conv_layers']:
             num_filters = layer['num_filters']
-            kernel_size = layer['kernel_size']
+            filter_size = layer['filter_size']
             stride = layer['stride']
             acts = tf.contrib.layers.convolution2d(acts, num_outputs=num_filters,
-                                                   kernel_size=[kernel_size, 1],
+                                                   kernel_size=[filter_size, 1],
                                                    stride=stride)
 
         # Activations should emerge from the convolution with shape
