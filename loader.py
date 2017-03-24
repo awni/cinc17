@@ -199,13 +199,11 @@ def main():
 
     # Run a few sanity checks.
     count = 0
-    for ecgs, labels in ldr.batches(ldr.train):
+    for ecgs, labels in ldr.train:
         count += 1
         assert len(ecgs) == len(labels) == batch_size, \
                 "Invalid number of examples."
         assert len(ecgs[0].shape) == 1, "ECG array should be 1D"
-    assert count == len(ldr.train) // batch_size, \
-            "Wrong number of batches."
 
 if __name__ == '__main__':
     main()
