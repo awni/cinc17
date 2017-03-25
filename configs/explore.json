@@ -23,17 +23,17 @@
         "batch_size" : 32,
         "conv_layers" : [
             { "filter_size" : 512,
-              "num_filters" : 64,
+              "num_filters" : 512,
               "stride" : 2
             },
             { "filter_size" : 256,
-              "num_filters" : 64,
+              "num_filters" : 512,
               "stride" : 2
             }
        ]
     },
 
     "io" : {
-        "save_path" : "/deep/group/sudnya/experiments/cnn2-size512_256-num64_64_adam"
+        "output_save_path" : "/deep/group/sudnya/experiments/cnn2-size512_256-num512_512_adam"
     }
 }
