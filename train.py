@@ -4,6 +4,7 @@ from __future__ import print_function
 
 import argparse
 import json
+import logging
 import numpy as np
 import os
 import pickle
@@ -14,6 +15,8 @@ import time
 import loader
 import network
 import utils
+
+logger = logging.getLogger("Train")
 
 def run_epoch(model, data_loader, session, summarizer):
     summary_op = tf.summary.merge_all()
@@ -47,7 +50,7 @@ def run_validation(model, data_loader, session, summarizer):
     print(msg.format(loss, acc))
 
 def main(argv=None):
-    parser = argparse.ArgumentParser(description="Train model")
+    parser = argparse.ArgumentParser(description="Train driver")
     parser.add_argument("-v", "--verbose",
             default=False, action="store_true")
     parser.add_argument("-c", "--config_file",
@@ -59,6 +62,12 @@ def main(argv=None):
     is_verbose   = arguments['verbose']
     config_file  = arguments['config_file']
 
+    if is_verbose:
+        logging.basicConfig(level=logging.DEBUG)
+    else:
+        logging.basicConfig(level=logging.INFO)
+    
+    
     with open(config_file) as fid:
         config = json.load(fid)
 
@@ -68,16 +77,16 @@ def main(argv=None):
                                 config['model']['batch_size'],
                                 seed=config['data']['seed'])
 
-    model = network.Model()
+    model = network.Network(is_verbose)
 
-    save_path = config['io']['save_path']
-    if not os.path.exists(save_path):
-        os.mkdir(save_path)
+    output_save_path = config['io']['output_save_path']
+    if not os.path.exists(output_save_path):
+        os.mkdir(output_save_path)
 
     config['model']['output_dim'] = data_loader.output_dim
-    with open(os.path.join(save_path, "config.json"), 'w') as fid:
+    with open(os.path.join(output_save_path, "config.json"), 'w') as fid:
         json.dump(config, fid)
-    with open(os.path.join(save_path, "loader.pkl"), 'wb') as fid:
+    with open(os.path.join(output_save_path, "loader.pkl"), 'wb') as fid:
         pickle.dump(data_loader, fid)
 
     with tf.Graph().as_default(), tf.Session() as sess:
@@ -87,11 +96,11 @@ def main(argv=None):
         model.init_train(config['optimizer'])
         tf.global_variables_initializer().run()
         saver = tf.train.Saver(tf.global_variables())
-        summarizer = tf.summary.FileWriter(save_path, sess.graph)
+        summarizer = tf.summary.FileWriter(output_save_path, sess.graph)
         for e in range(epochs):
             start = time.time()
             run_epoch(model, data_loader, sess, summarizer)
-            saver.save(sess, os.path.join(save_path, "model"))
+            saver.save(sess, os.path.join(output_save_path, "model"))
             print("Epoch {} time {:.1f} (s)".format(e, time.time() - start))
             run_validation(model, data_loader, sess, summarizer)
 

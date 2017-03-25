@@ -1,0 +1,39 @@
+{
+    "seed" : 4337,
+
+    "data" : {
+        "path" : "/deep/group/med/alivecor/training2017",
+        "seed" : 2016
+    },
+
+    "optimizer" : {
+        "name": "adam",
+        "epochs" : 100,
+        "learning_rate" : 1e-2,
+        "momentum" : 0.95,
+        "decay_rate" : 1.0,
+        "decay_steps" : 2000,
+        "beta_1": 0.9, 
+        "beta_2": 0.999, 
+        "epsilon": 1e-08 
+    },
+
+    "model" : {
+        "dropout" : 0.0,
+        "batch_size" : 32,
+        "conv_layers" : [
+            { "filter_size" : 512,
+              "num_filters" : 64,
+              "stride" : 2
+            },
+            { "filter_size" : 256,
+              "num_filters" : 64,
+              "stride" : 2
+            }
+       ]
+    },
+
+    "io" : {
+        "save_path" : "/deep/group/sudnya/experiments/cnn2-size512_256-num64_64_adam"
+    }
+}

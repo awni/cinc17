@@ -1,10 +1,22 @@
 
 import numpy as np
 import tensorflow as tf
+import logging
 
 MOMENTUM_INIT = 0.5
+BETA1 = 0.9
+BETA2 = 0.998
+EPSILON = 1e-8
 
-class Model:
+logger = logging.getLogger("Network")
+
+class Network:
+    def __init__(self, is_verbose):
+        if is_verbose:
+            logging.basicConfig(level=logging.DEBUG)
+        else:
+            logging.basicConfig(level=logging.INFO)
+
 
     def init_inference(self, config):
         self.output_dim = num_labels = config['output_dim']
@@ -76,7 +88,7 @@ class Model:
                             self.it, config['decay_steps'],
                             config['decay_rate'], staircase=True)
 
-        optimizer = tf.train.MomentumOptimizer(learning_rate, self.mom_var)
+        optimizer = self.get_optimizer(config)
 
         gvs = optimizer.compute_gradients(self.loss)
 
@@ -91,6 +103,29 @@ class Model:
 
     def set_momentum(self, session):
         self.mom_var.assign(self.momentum).eval(session=session)
+
+    #TODO: write a builder nicely later
+    def get_optimizer(self, config):
+        logger.debug("Config " + str(config))
+        
+        optimizer_name = config.get('name')
+        
+        if optimizer_name.lower() == 'momentum':
+            return tf.train.MomentumOptimizer(config.get('learning_rate'), self.mom_var)
+        elif optimizer_name.lower() == 'adam':
+            beta_1    = BETA1
+            beta_2    = BETA2
+            t_epsilon = EPSILON
+            if config.get('beta_1') != None:
+                beta_1 = config.get('beta_1')
+            if config.get('beta_2') != None:
+                beta_2 = config.get('beta_2')
+            if config.get('epsilon') != None:
+                t_epsilon = config.get('epsilon')
+                
+            return tf.train.AdamOptimizer(config.get('learning_rate'), beta1=beta_1, beta2=beta_2, epsilon=t_epsilon)
+        return tf.train.GradientDescentOptimizer(config.get('learning_rate'))
+        
 
     def feed_dict(self, inputs, labels=None):
         """

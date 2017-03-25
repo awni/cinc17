@@ -16,7 +16,7 @@ class Evaler:
             config = json.load(fid)
         config['model']['batch_size'] = batch_size
 
-        self.model = network.Model()
+        self.model = network.Network()
         self.graph = tf.Graph()
         self.session = sess = tf.Session(graph=self.graph)
         with self.graph.as_default():
