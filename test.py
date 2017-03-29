@@ -9,14 +9,14 @@ import network
 
 class Evaler:
 
-    def __init__(self, save_path, batch_size=1):
+    def __init__(self, save_path, is_verbose, batch_size=1):
         config_file = os.path.join(save_path, "config.json")
 
         with open(config_file, 'r') as fid:
             config = json.load(fid)
         config['model']['batch_size'] = batch_size
 
-        self.model = network.Network()
+        self.model = network.Network(is_verbose)
         self.graph = tf.Graph()
         self.session = sess = tf.Session(graph=self.graph)
         with self.graph.as_default():

@@ -21,17 +21,22 @@ def print_scores(labels, predictions, classes):
 
 def main():
     parser = argparse.ArgumentParser(description="Evaluater Script")
-    parser.add_argument("model_path")
+    parser.add_argument("-m", "--model_path", default="~/")
+    parser.add_argument("-v", "--verbose", default=False, action="store_true")
 
-    args = parser.parse_args()
+    parsed_arguments = parser.parse_args()
+    arguments        = vars(parsed_arguments)
+
+    is_verbose  = arguments['verbose']
+    model_path  = arguments['model_path']
 
     batch_size = 8
-    evaler = test.Evaler(args.model_path,
+    evaler = test.Evaler(model_path, is_verbose,
                  batch_size=batch_size)
 
     # TODO, (awni), would be good to simplify loading and
     # not rely on random seed for validation set.
-    config_file = os.path.join(args.model_path, "config.json")
+    config_file = os.path.join(model_path, "config.json")
     with open(config_file, 'r') as fid:
         config = json.load(fid)
     data_conf = config['data']

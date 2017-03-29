@@ -7,8 +7,8 @@
     },
 
     "optimizer" : {
-        "name": "adam",
-        "epochs" : 100,
+        "name": "momentum",
+        "epochs" : 50,
         "learning_rate" : 1e-2,
         "momentum" : 0.95,
         "decay_rate" : 1.0,
@@ -19,21 +19,21 @@
     },
 
     "model" : {
-        "dropout" : 0.0,
+        "dropout" : 0.5,
         "batch_size" : 32,
         "conv_layers" : [
-            { "filter_size" : 512,
-              "num_filters" : 512,
-              "stride" : 2
-            },
             { "filter_size" : 256,
-              "num_filters" : 512,
-              "stride" : 2
+              "num_filters" : 64, 
+              "stride" : 7
+            },
+            { "filter_size" : 128,
+              "num_filters" : 64, 
+              "stride" : 7
             }
        ]
     },
 
     "io" : {
-        "output_save_path" : "/deep/group/sudnya/experiments/cnn2-size512_256-num512_512_adam"
+        "output_save_path" : "/deep/group/sudnya/repro/cnn2-size256_128-num64_64_dp0_5_str7"
     }
 }
