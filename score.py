@@ -3,9 +3,12 @@ import json
 import numpy as np
 import os
 import sklearn.metrics as skm
+import logging
 
 import loader
 import test
+
+logger = logging.getLogger("Score")
 
 def print_scores(labels, predictions, classes):
     report = skm.classification_report(
@@ -16,8 +19,8 @@ def print_scores(labels, predictions, classes):
                         labels,
                         predictions,
                         average='macro')
-    print(report)
-    print("Macro Average F1: {:.3f}".format(macro_scores[2]))
+    logger.info(report)
+    logger.info("Macro Average F1: {:.3f}".format(macro_scores[2]))
 
 def main():
     parser = argparse.ArgumentParser(description="Evaluater Script")

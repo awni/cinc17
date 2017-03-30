@@ -47,12 +47,14 @@ def predict_record(record_id, model_path):
 
 def main():
     parser = argparse.ArgumentParser(description="Evaluater Script")
-    parser.add_argument("model_path")
-    parser.add_argument("record")
+    parser.add_argument("-v", "--verbose",
+            default = False, action = "store_true")
+    parser.add_argument("-m", "--model_path")
+    parser.add_argument("-r", "--record")
 
     args = parser.parse_args()
     prediction = predict_record(args.record, args.model_path)
-    print(prediction)
+    logger.info(prediction)
 
 if __name__ == "__main__":
     main()

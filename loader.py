@@ -46,6 +46,8 @@ class Loader:
         self.batch_size = batch_size
 
         self._train, self._val = load_all_data(data_path, val_frac)
+        logger.debug("Training set has " + str(len(self._train)) + " samples")
+        logger.debug("Validation set has " + str(len(self._val)) + " samples")
 
         self.compute_mean_std()
         self._train = [(self.normalize(ecg), l) for ecg, l in self._train]
@@ -79,6 +81,9 @@ class Loader:
         batches = [(inputs[i:i + batch_size], labels[i:i + batch_size])
                    for i in range(0, end, batch_size)]
         random.shuffle(batches)
+
+        logger.debug("Data set {" + str(data_size) + " samples}, batch size {" \
+                + str(batch_size) + "} -> " + str(len(batches)) + " batches")
         return batches
 
     def normalize(self, example):
