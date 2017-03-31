@@ -6,7 +6,7 @@ import sklearn.metrics as skm
 import logging
 
 import loader
-import test
+import evaler
 
 logger = logging.getLogger("Score")
 
@@ -34,7 +34,7 @@ def main():
     model_path  = arguments['model_path']
 
     batch_size = 8
-    evaler = test.Evaler(model_path, is_verbose,
+    evl = evaler.Evaler(model_path, is_verbose,
                  batch_size=batch_size)
 
     # TODO, (awni), would be good to simplify loading and
@@ -50,7 +50,7 @@ def main():
     predictions = []
     labels = []
     for batch in ldr.val:
-        preds = evaler.predict(batch[0])
+        preds = evl.predict(batch[0])
         predictions.append(preds)
         labels.append(batch[1])
     predictions = np.hstack(predictions)

@@ -24,4 +24,4 @@ set -o pipefail
 RECORD=$1
 
 printf "$RECORD," >> answers.txt
-python3 test.py . $RECORD >> answers.txt
+python3 evaler.py . $RECORD >> answers.txt

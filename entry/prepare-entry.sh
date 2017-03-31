@@ -14,7 +14,7 @@ cp ../setup.sh .
 cp ../next.sh .
 cp ../AUTHORS.txt .
 cp ../dependencies.txt .
-for f in 'eval' 'loader' 'network'
+for f in 'evaler' 'loader' 'network'
 do
     cp ../../${f}.py .
 done
