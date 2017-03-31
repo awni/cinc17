@@ -98,9 +98,15 @@ class Loader:
         """
         Estimates the mean and std over the training set.
         """
-        all_dat = np.hstack(w for w, _ in self._train)
-        self.mean = np.mean(all_dat, dtype=np.float32)
-        self.std = np.std(all_dat, dtype=np.float32)
+        n_samples = sum(len(w) for w, _ in self._train)
+        mean_sum = np.sum([np.sum(w) for w, _ in self._train])
+        mean = mean_sum / n_samples
+
+        var_sum = np.sum([np.sum((w - mean)**2) for w, _ in self._train])
+        var = var_sum / n_samples
+
+        self.mean = mean.astype(np.float32)
+        self.std = np.sqrt(var).astype(np.float32)
 
     @property
     def classes(self):
