@@ -29,7 +29,7 @@ def run_epoch(model, data_loader, session, summarizer):
         if it == 50:
             model.set_momentum(session)
             logger.debug("Setting initial momentum in iteration " + str(it))
-            
+
         msg = "Iter {}: AvgLoss {:.3f}, AvgAcc {:.3f}"
         logger.debug(msg.format(it, loss, acc))
         if it % 100 == 0:
@@ -59,7 +59,7 @@ def main(argv=None):
     parser.add_argument("-v", "--verbose",
             default=False, action="store_true")
     parser.add_argument("-c", "--config_file",
-            default="configs/test.json")
+            default="configs/train.json")
 
     parsed_arguments = parser.parse_args()
     arguments = vars(parsed_arguments)
@@ -71,8 +71,8 @@ def main(argv=None):
         logging.basicConfig(level=logging.DEBUG)
     else:
         logging.basicConfig(level=logging.INFO)
-    
-    
+
+
     with open(config_file) as fid:
         config = json.load(fid)
 
