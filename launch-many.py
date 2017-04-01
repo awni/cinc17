@@ -2,6 +2,7 @@ import argparse
 import json
 import logging
 import os
+import subprocess
 
 logger = logging.getLogger("Launch-many")
 
@@ -42,7 +43,8 @@ class Launcher:
             logger.debug("This iter cfg at" + str(output_cfg_path))
 
             #call dq TODO
-            #subprocess.popen(train.py -c configs/test-store.json)
+            p = subprocess.Popen(["python", "train.py","-c",output_cfg_path], stdout=subprocess.PIPE)
+            p.communicate()
 
 
     def get_cfg_path(self, output_dir, param_name, val):
