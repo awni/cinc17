@@ -30,10 +30,10 @@ class Launcher:
 
         
         override_config = default_config
-
+        logger.debug("override cfg starts as " + str(override_config))
         for val in param.get("value"):
             logger.debug("Hyper param value: " + str(val))
-            for k, v in override_config.iteritems():
+            for k, v in override_config.items():
                 self.search_and_replace_dict(v, param.get("name"), val)
             output_cfg_path = self.get_cfg_path(output_dir, param.get("name"), 
                     val)
@@ -55,7 +55,7 @@ class Launcher:
     def search_and_replace_dict(self, cfg, param, val):
 
         if isinstance(cfg, dict):
-            for k, v in cfg.iteritems():
+            for k, v in cfg.items():
                 #print "searching for ", param, " in ", k
                 
                 # is a dict itself
