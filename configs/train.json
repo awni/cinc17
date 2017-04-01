@@ -90,6 +90,6 @@
     },
 
     "io" : {
-        "save_path" : "saved_models/cnn16-lr-3"
+        "output_save_path" : "/Users/gregorydiamos/temp/saved_models"
     }
 }
