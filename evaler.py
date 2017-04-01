@@ -23,7 +23,7 @@ class Evaler:
             self.model.init_inference(config['model'])
             tf.global_variables_initializer().run(session=sess)
             saver = tf.train.Saver(tf.global_variables())
-            saver.restore(sess, os.path.join(save_path, "model"))
+            saver.restore(sess, os.path.join(save_path, "best_model.epoch"))
 
     def probs(self, inputs):
         model = self.model
@@ -47,12 +47,14 @@ def predict_record(record_id, model_path):
 
 def main():
     parser = argparse.ArgumentParser(description="Evaluater Script")
-    parser.add_argument("model_path")
-    parser.add_argument("record")
+    parser.add_argument("-v", "--verbose",
+            default = False, action = "store_true")
+    parser.add_argument("-m", "--model_path")
+    parser.add_argument("-r", "--record")
 
     args = parser.parse_args()
     prediction = predict_record(args.record, args.model_path)
-    print(prediction)
+    logger.info(prediction)
 
 if __name__ == "__main__":
     main()

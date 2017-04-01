@@ -7,6 +7,7 @@
     },
 
     "optimizer" : {
+        "name" : "momentum",
         "epochs" : 50,
         "learning_rate" : 1e-3,
         "momentum" : 0.95,
@@ -18,71 +19,15 @@
         "dropout" : 0.0,
         "batch_size" : 32,
         "conv_layers" : [
-            { "kernel_size" : 64,
+            { "filter_size" : 64,
               "num_filters" : 64,
               "stride" : 2
             },
-            { "kernel_size" : 64,
+            { "filter_size" : 64,
               "num_filters" : 64,
               "stride" : 2
             },
-            { "kernel_size" : 64,
-              "num_filters" : 64,
-              "stride" : 2
-            },
-            { "kernel_size" : 64,
-              "num_filters" : 64,
-              "stride" : 2
-            },
-            { "kernel_size" : 64,
-              "num_filters" : 64,
-              "stride" : 2
-            },
-            { "kernel_size" : 64,
-              "num_filters" : 64,
-              "stride" : 2
-            },
-            { "kernel_size" : 64,
-              "num_filters" : 64,
-              "stride" : 2
-            },
-            { "kernel_size" : 64,
-              "num_filters" : 64,
-              "stride" : 2
-            },
-            { "kernel_size" : 64,
-              "num_filters" : 64,
-              "stride" : 2
-            },
-            { "kernel_size" : 64,
-              "num_filters" : 64,
-              "stride" : 2
-            },
-            { "kernel_size" : 64,
-              "num_filters" : 64,
-              "stride" : 2
-            },
-            { "kernel_size" : 64,
-              "num_filters" : 64,
-              "stride" : 2
-            },
-            { "kernel_size" : 64,
-              "num_filters" : 64,
-              "stride" : 2
-            },
-            { "kernel_size" : 64,
-              "num_filters" : 64,
-              "stride" : 2
-            },
-            { "kernel_size" : 64,
-              "num_filters" : 64,
-              "stride" : 2
-            },
-            { "kernel_size" : 64,
-              "num_filters" : 64,
-              "stride" : 2
-            },
-            { "kernel_size" : 64,
+            { "filter_size" : 64,
               "num_filters" : 64,
               "stride" : 2
             }
@@ -90,6 +35,6 @@
     },
 
     "io" : {
-        "save_path" : "saved_models/cnn16-lr-3"
+        "output_save_path" : "saved_models/cnn16-lr-3"
     }
 }

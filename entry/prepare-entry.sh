@@ -14,14 +14,14 @@ cp ../setup.sh .
 cp ../next.sh .
 cp ../AUTHORS.txt .
 cp ../dependencies.txt .
-for f in 'eval' 'loader' 'network'
+for f in 'evaler' 'loader' 'network'
 do
     cp ../../${f}.py .
 done
 
 ## Copy model files
 model_dir=$1
-for f in 'config.json'  'loader.pkl'  'model.data-*'  'model.index'
+for f in 'config.json'  'loader.pkl'  'best_model.epoch.data-*'  'best_model.epoch.index'
 do
     cp $model_dir/$f .
 done

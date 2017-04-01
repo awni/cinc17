@@ -24,6 +24,7 @@ class Network:
 
         self.inputs = inputs = tf.placeholder(tf.float32, shape=(batch_size, None))
         acts = tf.reshape(inputs, (batch_size, -1, 1, 1))
+        logger.debug ("First activation mat shape " + str(acts.shape))
 
         for layer in config['conv_layers']:
             num_filters = layer['num_filters']
@@ -32,6 +33,7 @@ class Network:
             acts = tf.contrib.layers.convolution2d(acts, num_outputs=num_filters,
                                                    kernel_size=[filter_size, 1],
                                                    stride=stride)
+            logger.debug ("Next activation mat shape " + str(acts.shape))
 
         # Activations should emerge from the convolution with shape
         # [batch_size, time (subsampled), 1, num_channels]
@@ -95,6 +97,7 @@ class Network:
         # Gradient clipping
         clip_norm = config.get('clip_norm', None)
         if clip_norm is not None:
+            logger.debug("Setting clip_norm to " + str(clip_norm))
             tf.clip_by_global_norm([g for g, _ in gvs], clip_norm=clip_norm)
 
         train_op = optimizer.apply_gradients(gvs, global_step=self.it)
@@ -155,8 +158,10 @@ def _zero_pad(inputs):
 
 def _rnn(acts, input_dim, cell_type, scope=None):
     if cell_type == 'gru':
+        logger.info("Adding cell type " + cell_type + " to rnn")
         cell = tf.nn.rnn_cell.GRUCell(input_dim)
     elif cell_type == 'lstm':
+        logger.info("Adding cell type " + cell_type + " to rnn")
         cell = tf.nn.rnn_cell.LSTMCell(input_dim)
     else:
         msg = "Invalid cell type {}".format(cell_type)
@@ -170,6 +175,7 @@ def _bi_rnn(acts, input_dim, cell_type):
     """
     For some reason tf.bidirectional_dynamic_rnn requires a sequence length.
     """
+    logger.info("Bidirectional RNN")
     # Forwards
     with tf.variable_scope("fw") as fw_scope:
         acts_fw = _rnn(acts, input_dim, cell_type,

@@ -1,6 +1,5 @@
 from __future__ import absolute_import
 from __future__ import division
-from __future__ import print_function
 
 import argparse
 import json
@@ -29,9 +28,14 @@ def run_epoch(model, data_loader, session, summarizer):
         summarizer.add_summary(summary, global_step=it)
         if it == 50:
             model.set_momentum(session)
+            logger.debug("Setting initial momentum in iteration " + str(it))
+
+        msg = "Iter {}: AvgLoss {:.3f}, AvgAcc {:.3f}"
+        logger.debug(msg.format(it, loss, acc))
         if it % 100 == 0:
             msg = "Iter {}: AvgLoss {:.3f}, AvgAcc {:.3f}"
-            print(msg.format(it, loss, acc))
+            logger.info(msg.format(it, loss, acc))
+    return acc
 
 def run_validation(model, data_loader, session, summarizer):
     it = model.it.eval(session)
@@ -47,14 +51,15 @@ def run_validation(model, data_loader, session, summarizer):
     summary = utils.make_summary("Dev Loss", float(loss))
     summarizer.add_summary(summary, global_step=it)
     msg = "Validation: Loss {:.3f}, Acc {:.3f}"
-    print(msg.format(loss, acc))
+    logger.info(msg.format(loss, acc))
+    return acc
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description="Train driver")
     parser.add_argument("-v", "--verbose",
             default=False, action="store_true")
     parser.add_argument("-c", "--config_file",
-            default="configs/test.json")
+            default="configs/train.json")
 
     parsed_arguments = parser.parse_args()
     arguments = vars(parsed_arguments)
@@ -66,8 +71,8 @@ def main(argv=None):
         logging.basicConfig(level=logging.DEBUG)
     else:
         logging.basicConfig(level=logging.INFO)
-    
-    
+
+
     with open(config_file) as fid:
         config = json.load(fid)
 
@@ -97,12 +102,20 @@ def main(argv=None):
         tf.global_variables_initializer().run()
         saver = tf.train.Saver(tf.global_variables())
         summarizer = tf.summary.FileWriter(output_save_path, sess.graph)
+
+        best_eval_acc = 0.0;
+
         for e in range(epochs):
             start = time.time()
-            run_epoch(model, data_loader, sess, summarizer)
+            train_acc = run_epoch(model, data_loader, sess, summarizer)
             saver.save(sess, os.path.join(output_save_path, "model"))
-            print("Epoch {} time {:.1f} (s)".format(e, time.time() - start))
-            run_validation(model, data_loader, sess, summarizer)
+            logger.info("Epoch {} time {:.1f} (s)".format(e, time.time() - start))
+            eval_acc = run_validation(model, data_loader, sess, summarizer)
+
+            if eval_acc > best_eval_acc:
+                saver.save(sess, os.path.join(output_save_path, "best_model.epoch"))
+                best_eval_acc = eval_acc
+                logger.info("Best accuracy so far: " + str(best_eval_acc))
 
 if __name__ == '__main__':
     main()
