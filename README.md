@@ -1,3 +1,5 @@
+### Install
+
 Install dependencies for running on the deep cluster with Python 3 and GPU enabled Tensorflow
 
 ```
@@ -22,11 +24,15 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda-8.0/lib64
 export PATH=$PATH:/usr/local/cuda-8.0/bin:
 ```
 
+### Run
+
 Run with
 ```
 gpu=0
 env CUDA_VISIBLE_DEVICES=$gpu python train.py
 ```
+
+### Tensorboard
 
 To view results run:
 ```
@@ -34,3 +40,20 @@ port=8888
 log_dir=<directory_of_saved_models>
 tensorboard --port $port --logdir $log_dir
 ```
+
+### Jupyter Notebook
+
+First install `jupyter` with
+```
+pip install jupyter
+```
+
+Then to launch the notebook
+
+```
+cd notebooks
+env CUDA_VISIBLE_DEVICES=<gpu> jupyter notebook --port <port> --ip 0.0.0.0
+```
+replace `<gpu>` and `<port>` with desired values.
+
+

@@ -23,7 +23,7 @@ class Evaler:
             self.model.init_inference(config['model'])
             tf.global_variables_initializer().run(session=sess)
             saver = tf.train.Saver(tf.global_variables())
-            saver.restore(sess, os.path.join(save_path, "model"))
+            saver.restore(sess, os.path.join(save_path, "best_model.epoch"))
 
     def probs(self, inputs):
         model = self.model
