@@ -43,7 +43,7 @@ class Launcher:
             logger.debug("This iter cfg at" + str(output_cfg_path))
 
             #call dq TODO
-            p = subprocess.Popen(["~/first-wp/dq/dq-submit", "python", "train.py","-c",output_cfg_path], stdout=subprocess.PIPE)
+            p = subprocess.Popen(["dq-submit", "python", "train.py","-c",output_cfg_path], stdout=subprocess.PIPE)
 #p = subprocess.Popen(["python", "train.py","-c",output_cfg_path], stdout=subprocess.PIPE)
             p.communicate()
 
