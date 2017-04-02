@@ -34,6 +34,6 @@
     },
 
     "io" : {
-        "output_save_path" : "/deep/group/sudnya/repro/cnn2-size256_128-num64_64_dp0_5_str7"
+        "output_save_path" : "/deep/group/sudnya/repro/"
     }
 }
