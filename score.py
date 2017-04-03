@@ -19,7 +19,7 @@ def print_scores(labels, predictions, classes):
                         labels,
                         predictions,
                         average='macro')
-    logger.info(report)
+    logger.info("\n"+report)
     logger.info("Macro Average F1: {:.3f}".format(macro_scores[2]))
 
 def load_model(model_path, is_verbose, batch_size):
