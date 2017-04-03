@@ -5,12 +5,12 @@ import os
 import subprocess
 from pathlib import Path
 
-logger = logging.getLogger("Launch-many")
+logger = logging.getLogger("Launcher")
 
 class Launcher:
     """
-    Launcher class for calling dq to launch train.py with a list of 
-    hyperparameter. 
+    Launcher class for calling dq to launch train.py with each entry in a  
+    list of hyperparameters
     """
     def __init__(self, default_config, param, experiment_name):
         """
@@ -54,7 +54,7 @@ class Launcher:
 
                         #call dq TODO
                         DQ_CFG = output_cfg_path
-                        #os.system("DQ_CFG=%s dq-submit dq-launch.sh"%output_cfg_path)
+                        os.system("DQ_CFG=%s dq-submit dq-launch.sh"%output_cfg_path)
 
 
     def get_cfg_path(self, output_dir, param_name, val):
@@ -102,7 +102,7 @@ def get_default_config():
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Data Loader")
+    parser = argparse.ArgumentParser(description="Launcher")
     parser.add_argument("-v", "--verbose", default=False, action="store_true")
     parser.add_argument("-e", "--experiment_name", default=None)
     parser.add_argument("-b", "--base_config", default=None)
