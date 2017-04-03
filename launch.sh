@@ -2,5 +2,5 @@
 
 #gpu=3
 #env CUDA_VISIBLE_DEVICES=$gpu 
-python train.py -c configs/explore.json 
+python train.py -c configs/cnn20-lr-1.json -v
 echo "Started training at: ", $(date +%m:%d:%y-%H:%M:%S)
