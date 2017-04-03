@@ -27,59 +27,58 @@ class Launcher:
         override_config = default_config
         logger.debug("override cfg starts as " + str(override_config))
         
-        for val in param.get("value"):
-            logger.debug("Hyper param value: " + str(val))
+        ctr = 0
+        for p_name in param.get("value"):
+            logger.debug("Hyper param: " + str(p_name))
             
-            #TODO not tested for more than one hyperparams
+            #TODO not tested for more than one hyperparams list
             for k, v in override_config.items():
-                self.search_and_replace_dict(v, param.get("name"), val)
+                if k == p_name:
+                    logger.debug ("Found " + str(p_name) + " : " + str(v))
+                    for i in param.get("value"):
+                        override_config[k] = i 
+                        #self.search_and_replace_dict(v, p_name), val)
             
-            output_cfg_path, output_dir_exp = self.get_cfg_path(output_dir, 
-                    param.get("name"), val)
-            override_config['io']['output_save_path'] = output_dir_exp
+                        o_dir_exp = self.get_op_path(output_dir, p_name, ctr)
+                        o_cfg_path = os.path.join(o_dir_exp, "override.cfg")
+                        ctr += 1
+                        override_config['io']['output_save_path'] = o_dir_exp
             
-            if not os.path.exists(output_dir_exp):
-                logger.debug("Creating " + str(output_dir_exp))
-                path = Path(output_dir_exp)
-                path.mkdir(parents=True)
-            
-            with open(output_cfg_path, 'w') as fp:
-                json.dump(override_config, fp)
+                        if not os.path.exists(o_dir_exp):
+                            logger.debug("Creating " + str(o_dir_exp))
+                            path = Path(o_dir_exp)
+                            path.mkdir(parents=True)
+                        
+                        with open(o_cfg_path, 'w') as fp:
+                            json.dump(override_config, fp)
 
-            #call dq TODO
-            DQ_CFG = output_cfg_path
-            os.system("DQ_CFG=%s dq-submit launch.sh"%output_cfg_path)
-#p = subprocess.Popen(["dq-submit", "launch.sh"]
-#"python", "train.py", "-c",
-#                output_cfg_path], stdout=subprocess.PIPE)
-            #p.communicate()
+                        #call dq TODO
+                        DQ_CFG = output_cfg_path
+                        #os.system("DQ_CFG=%s dq-submit dq-launch.sh"%output_cfg_path)
 
 
     def get_cfg_path(self, output_dir, param_name, val):
         dr = os.path.join(output_dir , param_name + "_" + str(val))
-        cfg = os.path.join(dr, "override.cfg")
-        logger.debug("dir: " + str(dr) + " cfg: " + str(cfg))
-        return cfg, dr
+        logger.debug("dir: " + str(dr))
+        return dr
    
 
-    #TODO: refactor later
-    def search_and_replace_dict(self, cfg, param, val):
-
-        if isinstance(cfg, dict):
-            for k, v in cfg.items():
-                
-                # is a dict itself
-                if isinstance(v, dict):
-                    return self.search_and_replace_dict(v, param, val)
-                
-                # is not a dict, so search with self
-                else:
-                    # if not a dict, then look in current
-                    if k == param:
-                        cfg[k] = val
-                        return
-        
-        return
+#    #TODO: refactor later
+#    def search_and_replace_dict(self, cfg, param, val):
+#        if isinstance(cfg, dict):
+#            for k, v in cfg.items():
+#                
+#                # is a dict itself
+#                if isinstance(v, dict):
+#                    if k == param:
+#                        print("Found "+ str(k) + " : " + str(cfg[k]))
+#                        cfg[k] = val
+#                        print("Replaced to " + str(cfg[k]))
+#                        return
+#                    else:
+#                        return self.search_and_replace_dict(v, param, val)
+#                
+#        return
 
 
 

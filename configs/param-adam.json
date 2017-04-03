@@ -1,0 +1,45 @@
+{
+    "name" : "optimizer",
+    "value": [
+        {
+            "name": "adam",
+            "epochs" : 50,
+            "learning_rate" : 1e-2,
+            "decay_rate" : 1.0,
+            "decay_steps" : 2000,
+            "beta_1": 0.9,
+            "beta_2": 0.999,
+            "epsilon": 1e-08
+        },
+        {
+            "name": "adam",
+            "epochs" : 50,
+            "learning_rate" : 1e-2,
+            "decay_rate" : 1.0,
+            "decay_steps" : 2000,
+            "beta_1": 0.6,
+            "beta_2": 0.999,
+            "epsilon": 1e-08
+        },
+        {
+            "name": "adam",
+            "epochs" : 50,
+            "learning_rate" : 1e-2,
+            "decay_rate" : 1.0,
+            "decay_steps" : 2000,
+            "beta_1": 0.3,
+            "beta_2": 0.999,
+            "epsilon": 1e-08
+        },
+        {
+            "name": "adam",
+            "epochs" : 50,
+            "learning_rate" : 1e-2,
+            "decay_rate" : 1.0,
+            "decay_steps" : 2000,
+            "beta_1": 0.1,
+            "beta_2": 0.999,
+            "epsilon": 1e-08
+        }
+]
+}
