@@ -22,18 +22,7 @@ def print_scores(labels, predictions, classes):
     logger.info(report)
     logger.info("Macro Average F1: {:.3f}".format(macro_scores[2]))
 
-def main():
-    parser = argparse.ArgumentParser(description="Evaluater Script")
-    parser.add_argument("-m", "--model_path", default="~/")
-    parser.add_argument("-v", "--verbose", default=False, action="store_true")
-
-    parsed_arguments = parser.parse_args()
-    arguments        = vars(parsed_arguments)
-
-    is_verbose  = arguments['verbose']
-    model_path  = arguments['model_path']
-
-    batch_size = 8
+def load_model(model_path, is_verbose, batch_size):
     evl = evaler.Evaler(model_path, is_verbose,
                  batch_size=batch_size)
 
@@ -46,7 +35,9 @@ def main():
     ldr = loader.Loader(data_conf['path'],
                         batch_size,
                         seed=data_conf['seed'])
+    return evl, ldr
 
+def eval_all(ldr, evl):
     predictions = []
     labels = []
     for batch in ldr.val:
@@ -55,7 +46,23 @@ def main():
         labels.append(batch[1])
     predictions = np.hstack(predictions)
     labels = np.hstack(labels)
+    return predictions, labels
 
+def main():
+    parser = argparse.ArgumentParser(description="Evaluater Script")
+    parser.add_argument("-m", "--model_path", default="~/")
+    parser.add_argument("-v", "--verbose", default=False, action="store_true")
+
+    parsed_arguments = parser.parse_args()
+    arguments = vars(parsed_arguments)
+
+    is_verbose = arguments['verbose']
+    model_path = arguments['model_path']
+    batch_size = 8
+
+    evl, ldr = load_model(model_path, is_verbose, batch_size)
+
+    predictions, labels = eval_all(ldr, evl)
     print_scores(labels, predictions, ldr.classes)
 
 if __name__ == "__main__":
