@@ -21,20 +21,24 @@
         "conv_layers" : [
             { "filter_size" : 64,
               "num_filters" : 64,
-              "stride" : 2
+              "stride" : 4
             },
             { "filter_size" : 64,
               "num_filters" : 64,
-              "stride" : 2
+              "stride" : 4
             },
             { "filter_size" : 64,
               "num_filters" : 64,
-              "stride" : 2
+              "stride" : 4
+            },
+            { "filter_size" : 64,
+              "num_filters" : 64,
+              "stride" : 4
             }
        ]
     },
 
     "io" : {
-        "output_save_path" : "saved_models/cnn16-lr-3"
+        "output_save_path" : "saved_models/cnn4_4-lr-3"
     }
 }
