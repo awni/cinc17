@@ -47,8 +47,11 @@ class Launcher:
                 json.dump(override_config, fp)
 
             #call dq TODO
-            #p = subprocess.Popen(["dq-submit", "python", "train.py", "-c",/
-            #    output_cfg_path], stdout=subprocess.PIPE)
+            DQ_CFG = output_cfg_path
+            os.system("DQ_CFG=%s dq-submit launch.sh"%output_cfg_path)
+#p = subprocess.Popen(["dq-submit", "launch.sh"]
+#"python", "train.py", "-c",
+#                output_cfg_path], stdout=subprocess.PIPE)
             #p.communicate()
 
 
