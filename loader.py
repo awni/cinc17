@@ -163,7 +163,7 @@ def load_all_data(data_path, val_frac):
     will contain a list of pairs of raw ecg and the
     corresponding label.
     """
-    label_file = os.path.join(data_path, "REFERENCE.csv")
+    label_file = os.path.join(data_path, "REFERENCE-v2.csv")
     # Load record ids + labels
     with open(label_file, 'r') as fid:
         records = [l.strip().split(",") for l in fid]
