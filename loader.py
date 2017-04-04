@@ -58,6 +58,7 @@ class Loader:
         classes = sorted([c for c, _ in label_counter.most_common()])
         self._int_to_class = dict(zip(range(len(classes)), classes))
         self._class_to_int = {c : i for i, c in self._int_to_class.items()}
+        self.class_counts = [label_counter[c] for c in classes]
 
         self._train = self.batches(self._train)
         self._val = self.batches(self._val)
@@ -143,7 +144,8 @@ class Loader:
         return (self.mean,
                 self.std,
                 self._int_to_class,
-                self._class_to_int)
+                self._class_to_int,
+                self.class_counts)
 
     def __setstate__(self, state):
         """
@@ -153,6 +155,7 @@ class Loader:
         self.std = state[1]
         self._int_to_class = state[2]
         self._class_to_int = state[3]
+        self.class_counts = state[4]
 
 def load_all_data(data_path, val_frac):
     """

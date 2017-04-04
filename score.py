@@ -23,8 +23,6 @@ def print_scores(labels, predictions, classes):
     logger.info("Macro Average F1: {:.3f}".format(macro_scores[2]))
 
 def load_model(model_path, is_verbose, batch_size):
-    evl = evaler.Evaler(model_path, is_verbose,
-                 batch_size=batch_size)
 
     # TODO, (awni), would be good to simplify loading and
     # not rely on random seed for validation set.
@@ -35,6 +33,11 @@ def load_model(model_path, is_verbose, batch_size):
     ldr = loader.Loader(data_conf['path'],
                         batch_size,
                         seed=data_conf['seed'])
+
+    evl = evaler.Evaler(model_path, is_verbose,
+                 batch_size=batch_size,
+                 class_counts=ldr.class_counts)
+
     return evl, ldr
 
 def eval_all(ldr, evl):
