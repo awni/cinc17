@@ -39,7 +39,7 @@ done
 
 ## Make zip
 rm -r __pycache__
-zip -r entry.zip entry
+zip -r entry.zip .
 
 ## Cleanup
 # rm -r entry
