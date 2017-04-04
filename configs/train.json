@@ -20,25 +20,41 @@
         "batch_size" : 32,
         "conv_layers" : [
             { "filter_size" : 64,
-              "num_filters" : 64,
-              "stride" : 4
+              "num_filters" : 32,
+              "stride" : 2
             },
             { "filter_size" : 64,
-              "num_filters" : 64,
-              "stride" : 4
+              "num_filters" : 32,
+              "stride" : 2
             },
             { "filter_size" : 64,
-              "num_filters" : 64,
-              "stride" : 4
+              "num_filters" : 32,
+              "stride" : 2
             },
             { "filter_size" : 64,
-              "num_filters" : 64,
-              "stride" : 4
+              "num_filters" : 32,
+              "stride" : 2
+            },
+            { "filter_size" : 64,
+              "num_filters" : 32,
+              "stride" : 2
+            },
+            { "filter_size" : 64,
+              "num_filters" : 32,
+              "stride" : 2
+            },
+            { "filter_size" : 64,
+              "num_filters" : 32,
+              "stride" : 2
+            },
+            { "filter_size" : 64,
+              "num_filters" : 32,
+              "stride" : 2
             }
        ]
     },
 
     "io" : {
-        "output_save_path" : "saved_models/cnn4_4-lr-3"
+        "output_save_path" : "saved_models/cnn8_32-lr-3"
     }
 }
