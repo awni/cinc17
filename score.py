@@ -11,6 +11,7 @@ import evaler
 logger = logging.getLogger("Score")
 
 def print_scores(labels, predictions, classes):
+    accuracy = skm.accuracy_score(labels, predictions)
     report = skm.classification_report(
                 labels, predictions,
                 target_names=classes,
@@ -19,6 +20,7 @@ def print_scores(labels, predictions, classes):
                         labels,
                         predictions,
                         average='macro')
+    logger.info("Accuracy {:.3f}".format(accuracy))
     logger.info("\n"+report)
     logger.info("Macro Average F1: {:.3f}".format(macro_scores[2]))
 
@@ -36,7 +38,7 @@ def load_model(model_path, is_verbose, batch_size):
 
     evl = evaler.Evaler(model_path, is_verbose,
                  batch_size=batch_size,
-                 class_counts=ldr.class_counts)
+                 class_counts=None)
 
     return evl, ldr
 
