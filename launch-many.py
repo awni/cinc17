@@ -28,36 +28,37 @@ class Launcher:
         logger.debug("override cfg starts as " + str(override_config))
         
         ctr = 0
-        for p_name in param.get("value"):
-            logger.debug("Hyper param: " + str(p_name))
+        p_name = param.get("name")
+#for p_name in param.get("value"):
+#            logger.debug("Hyper param: " + str(p_name))
             
-            #TODO not tested for more than one hyperparams list
-            for k, v in override_config.items():
-                if k == p_name:
-                    logger.debug ("Found " + str(p_name) + " : " + str(v))
-                    for i in param.get("value"):
-                        override_config[k] = i 
-                        #self.search_and_replace_dict(v, p_name), val)
-            
-                        o_dir_exp = self.get_op_path(output_dir, p_name, ctr)
-                        o_cfg_path = os.path.join(o_dir_exp, "override.cfg")
-                        ctr += 1
-                        override_config['io']['output_save_path'] = o_dir_exp
-            
-                        if not os.path.exists(o_dir_exp):
-                            logger.debug("Creating " + str(o_dir_exp))
-                            path = Path(o_dir_exp)
-                            path.mkdir(parents=True)
-                        
-                        with open(o_cfg_path, 'w') as fp:
-                            json.dump(override_config, fp)
+        #TODO not tested for more than one hyperparams list
+        for k, v in override_config.items():
+            if k == p_name:
+                logger.debug ("Found " + str(p_name) + " : " + str(v))
+                for i in param.get("value"):
+                    override_config[k] = i 
+                    #self.search_and_replace_dict(v, p_name), val)
+        
+                    o_dir_exp = self.get_op_path(output_dir, p_name, ctr)
+                    o_cfg_path = os.path.join(o_dir_exp, "override.cfg")
+                    ctr += 1
+                    override_config['io']['output_save_path'] = o_dir_exp
+        
+                    logger.info("Creating " + str(o_dir_exp))
+                    path = Path(o_dir_exp)
+                    path.mkdir(parents=True)
+                    
+                    with open(o_cfg_path, 'w') as fp:
+                        json.dump(override_config, fp)
 
-                        #call dq TODO
-                        DQ_CFG = output_cfg_path
-                        os.system("DQ_CFG=%s dq-submit dq-launch.sh"%output_cfg_path)
+                    #call dq TODO
+                    DQ_CFG = o_cfg_path
+                    logger.info ("Launching DQ_CFG=%s dq-submit dq-launch.sh"%o_cfg_path)
+                    os.system("DQ_CFG=%s dq-submit dq-launch.sh"%o_cfg_path)
 
 
-    def get_cfg_path(self, output_dir, param_name, val):
+    def get_op_path(self, output_dir, param_name, val):
         dr = os.path.join(output_dir , param_name + "_" + str(val))
         logger.debug("dir: " + str(dr))
         return dr
