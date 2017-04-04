@@ -69,6 +69,7 @@ def main():
     args = parser.parse_args()
     prediction = predict_record(args.record, args.model_path,
                                 prior=args.prior)
+    print(prediction)
 
 if __name__ == "__main__":
     main()
