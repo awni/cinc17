@@ -52,7 +52,9 @@ class Network:
         # Reduce the time-dimension to make a single prediction
         acts = tf.reduce_mean(acts, axis=1)
 
-        self.logits = tf.contrib.layers.fully_connected(acts, self.output_dim)
+        self.logits = tf.contrib.layers.fully_connected(acts,
+                            self.output_dim,
+                            activation_fn=None)
         self.probs = tf.nn.softmax(self.logits)
 
     def init_loss(self):
@@ -110,9 +112,9 @@ class Network:
     #TODO: write a builder nicely later
     def get_optimizer(self, config):
         logger.debug("Config " + str(config))
-        
+
         optimizer_name = config.get('name')
-        
+
         if optimizer_name.lower() == 'momentum':
             return tf.train.MomentumOptimizer(config.get('learning_rate'), self.mom_var)
         elif optimizer_name.lower() == 'adam':
@@ -125,10 +127,10 @@ class Network:
                 beta_2 = config.get('beta_2')
             if config.get('epsilon') != None:
                 t_epsilon = config.get('epsilon')
-                
+
             return tf.train.AdamOptimizer(config.get('learning_rate'), beta1=beta_1, beta2=beta_2, epsilon=t_epsilon)
         return tf.train.GradientDescentOptimizer(config.get('learning_rate'))
-        
+
 
     def feed_dict(self, inputs, labels=None):
         """
