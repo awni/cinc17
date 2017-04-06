@@ -32,8 +32,20 @@ class Network:
             stride = layer['stride']
             acts = tf.contrib.layers.convolution2d(acts, num_outputs=num_filters,
                                                    kernel_size=[filter_size, 1],
-                                                   stride=stride)
+                                                   stride=stride,
+                                                   biases_initializer=None,
+                                                   activation_fn=None)
             logger.debug ("Next activation mat shape " + str(acts.shape))
+            bn = layer.get('enable_batch_norm', None)
+            if bn is not None and bn == True:
+                acts = tf.contrib.layers.batch_norm(acts, decay=0.9, center=True, 
+                        scale=True, epsilon=1e-8, activation_fn=tf.nn.relu, 
+                        is_training=True)
+            
+            ln = layer.get('enable_layer_norm', None)
+            if ln is not None and ln == True:
+                acts = tf.contrib.layers.layer_norm(acts, center=True, 
+                        scale=True, activation_fn=tf.nn.relu) 
 
         # Activations should emerge from the convolution with shape
         # [batch_size, time (subsampled), 1, num_channels]
@@ -49,17 +61,6 @@ class Network:
             else:
                 acts = _rnn(acts, rnn_dim, cell_type)
 
-        #TODO: for now assume only one batch norm layer allowed at a time
-        bn_conf = config.get('batch-norm', None)
-        if bn_conf is not None:
-            acts = tf.contrib.layers.batch_norm(acts, decay=0.9, center=True, 
-                    scale=True, epsilon=1e-8, activation_fn=None, 
-                    is_training=True)
-        
-        ln_conf = config.get('layer-norm', None)
-        if ln_conf is not None:
-            acts = tf.contrib.layers.layer_norm(acts, center=True, 
-                    scale=True, activation_fn=None) 
         # Reduce the time-dimension to make a single prediction
         acts = tf.reduce_mean(acts, axis=1)
 
