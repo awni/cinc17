@@ -8,6 +8,7 @@ import numpy as np
 import os
 import pickle
 import random
+import sklearn.metrics as skm
 import tensorflow as tf
 import time
 
@@ -39,19 +40,28 @@ def run_epoch(model, data_loader, session, summarizer):
 
 def run_validation(model, data_loader, session, summarizer):
     it = model.it.eval(session)
-    results = []
+    predictions = []
+    labels = []
+    losses = []
     for batch in data_loader.val:
-        ops = [model.acc, model.loss]
+        ops = [model.probs, model.loss]
         feed_dict = model.feed_dict(*batch)
-        res = session.run(ops, feed_dict=feed_dict)
-        results.append(res)
-    acc, loss = np.mean(results, axis=0)
+        probs, loss = session.run(ops, feed_dict=feed_dict)
+        predictions.extend(np.argmax(probs, axis=1).tolist())
+        labels.extend(batch[1])
+        losses.append(loss)
+    loss = np.mean(losses)
+    acc = skm.accuracy_score(labels, predictions)
+    mac_f1 = skm.precision_recall_fscore_support(
+                        labels,
+                        predictions,
+                        average='macro')[2]
     summary = utils.make_summary("Dev Accuracy", float(acc))
     summarizer.add_summary(summary, global_step=it)
     summary = utils.make_summary("Dev Loss", float(loss))
     summarizer.add_summary(summary, global_step=it)
-    msg = "Validation: Loss {:.3f}, Acc {:.3f}"
-    logger.info(msg.format(loss, acc))
+    msg = "Validation: Loss {:.3f}, Acc {:.3f}, Macro F1 {:.3f}"
+    logger.info(msg.format(loss, acc, mac_f1))
     return acc
 
 def main(argv=None):
