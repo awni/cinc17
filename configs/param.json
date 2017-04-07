@@ -1,4 +1,19 @@
 {
-    "name" : "dropout",
-    "value": [0.5, 0.6, 0.7]
+    "name": "model",
+    "value": [
+    {
+        "dropout" : 0.02,
+        "batch_size" : 32,
+        "conv_layers" : [ { "enable_layer_norm" : false, "filter_size" : 256, "num_filters" : 32, "stride" : 2 } ],
+        "conv_layers" : [ { "enable_layer_norm" : false, "filter_size" : 256, "num_filters" : 32, "stride" : 2 } ],
+        "conv_layers" : [ { "enable_layer_norm" : false, "filter_size" : 256, "num_filters" : 32, "stride" : 2 } ], 
+        "conv_layers" : [ { "enable_layer_norm" : false, "filter_size" : 256, "num_filters" : 32, "stride" : 2 } ],
+        "conv_layers" : [ { "enable_layer_norm" : false, "filter_size" : 256, "num_filters" : 32, "stride" : 2 } ],
+        "conv_layers" : [ { "enable_layer_norm" : false, "filter_size" : 256, "num_filters" : 32, "stride" : 2 } ],
+        "conv_layers" : [ { "enable_layer_norm" : false, "filter_size" : 256, "num_filters" : 32, "stride" : 2 } ],
+        "conv_layers" : [ { "enable_layer_norm" : false, "filter_size" : 256, "num_filters" : 32, "stride" : 2 } ]
+
+    }
+    ]
+
 }
