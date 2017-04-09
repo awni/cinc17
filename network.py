@@ -190,7 +190,7 @@ def _rnn(acts, input_dim, cell_type, scope=None):
         cell = tf.contrib.rnn.GRUCell(input_dim)
     elif cell_type == 'lstm':
         logger.info("Adding cell type " + cell_type + " to rnn")
-        cell = tf.contrib.LSTMCell(input_dim)
+        cell = tf.contrib.rnn.LSTMCell(input_dim)
     else:
         msg = "Invalid cell type {}".format(cell_type)
         raise ValueError(msg)
