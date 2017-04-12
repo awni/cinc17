@@ -24,6 +24,7 @@ def run_epoch(model, data_loader, session, summarizer):
     for batch in data_loader.train:
         ops = [model.train_op, model.avg_loss,
                model.avg_acc, model.it, summary_op]
+
         res = session.run(ops, feed_dict=model.feed_dict(*batch))
         _, loss, acc, it, summary = res
         summarizer.add_summary(summary, global_step=it)
@@ -89,8 +90,9 @@ def main(argv=None):
     random.seed(config['seed'])
     epochs = config['optimizer']['epochs']
     data_loader = loader.Loader(config['data']['path'],
-                                config['model']['batch_size'],
-                                seed=config['data']['seed'])
+                    config['model']['batch_size'],
+                    seed=config['data']['seed'],
+                    augment=config['data'].get('augment', False))
 
     model = network.Network(is_verbose)
 

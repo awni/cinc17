@@ -28,13 +28,15 @@ class Loader:
     """
 
     def __init__(self, data_path, batch_size,
-                 val_frac=0.2, seed=None):
+                 val_frac=0.2, seed=None,
+                 augment=False):
         """
         :param data_path: path to the training and validation files
         :param batch_size: size of the minibatches to train on
         :param val_frac: fraction of the dataset to use for validation
                          (held out by record)
         :param seed: seed the rng for shuffling data
+        :param augment: set to true to augment the training data
         """
         if not os.path.exists(data_path):
             msg = "Non-existent data path: {}".format(data_path)
@@ -44,6 +46,7 @@ class Loader:
             random.seed(seed)
 
         self.batch_size = batch_size
+        self.augment = augment
 
         self._train, self._val = load_all_data(data_path, val_frac)
         logger.debug("Training set has " + str(len(self._train)) + " samples")
@@ -122,7 +125,10 @@ class Loader:
     @property
     def train(self):
         """ Returns the raw training set. """
-        return self._train
+        for ecgs, labels in self._train:
+            if self.augment:
+                ecgs = [transform(ecg) for ecg in ecgs]
+            yield (ecgs, labels)
 
     @property
     def val(self):
@@ -156,6 +162,11 @@ class Loader:
         self._int_to_class = state[2]
         self._class_to_int = state[3]
         self.class_counts = state[4]
+
+def transform(ecg):
+    scale = random.uniform(0.1, 5.0)
+    flip = random.choice([-1.0, 1.0])
+    return  ecg * flip * scale
 
 def load_all_data(data_path, val_frac):
     """

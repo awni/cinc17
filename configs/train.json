@@ -3,7 +3,8 @@
 
     "data" : {
         "path" : "/deep/group/med/alivecor/training2017",
-        "seed" : 2016
+        "seed" : 2016,
+        "augment" : true
     },
 
     "optimizer" : {
