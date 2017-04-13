@@ -58,6 +58,6 @@
     },
 
     "io" : {
-        "output_save_path" : "saved_models/cnn8_32-lr-3"
+        "output_save_path" : "/deep/group/sudnya/test_noise-200"
     }
 }

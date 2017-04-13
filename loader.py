@@ -29,7 +29,7 @@ class Loader:
 
     def __init__(self, data_path, batch_size,
                  val_frac=0.2, seed=None,
-                 augment=False, random_noise=False):
+                 augment=False, random_noise=False, random_samples=200):
         """
         :param data_path: path to the training and validation files
         :param batch_size: size of the minibatches to train on
@@ -48,7 +48,7 @@ class Loader:
         self.batch_size = batch_size
         self.augment = augment
 
-        self._train, self._val = load_all_data(data_path, val_frac, random_noise)
+        self._train, self._val = load_all_data(data_path, val_frac, random_noise, random_samples)
         logger.debug("Training set has " + str(len(self._train)) + " samples")
         logger.debug("Validation set has " + str(len(self._val)) + " samples")
 
@@ -169,20 +169,19 @@ def transform(ecg):
     return  ecg * flip * scale
 
 
-def add_random_noise_samples():
+def add_random_noise_samples(sample_count):
     retVal = []
-    for i in range(0, 2):
-        length_window = random.randint(1000, 15000)
-        #logger.info("length " + str(length_window))
+    for i in range(0, sample_count):
+        length_window = random.randint(3000, 18000)
+        logger.debug("Random window length " + str(length_window))
         retVal.append((np.random.randint(low=-100, high=100, size=(length_window), dtype=np.int16), 'N'))
-    logger.info("Returning stuff like ")
-    logger.info(retVal[0])
+    logger.debug("First entry of random samples" + str(retVal[0]))
 
     return retVal
 
 
 
-def load_all_data(data_path, val_frac, train_noise):
+def load_all_data(data_path, val_frac, train_noise, random_samples):
     """
     Returns tuple of training and validation sets. Each set
     will contain a list of pairs of raw ecg and the
@@ -209,7 +208,7 @@ def load_all_data(data_path, val_frac, train_noise):
     logger.info(train[0])
     if train_noise:
         logger.info("Adding random noise samples to training set")
-        t = add_random_noise_samples()
+        t = add_random_noise_samples(random_samples)
     return train, val
 
 def load_ecg_mat(ecg_file):
@@ -237,7 +236,7 @@ def main():
         logging.basicConfig(level=logging.INFO)
 
     random.seed(2016)
-    ldr = Loader(data_path, batch_size, random_noise=True)
+    ldr = Loader(data_path, batch_size, random_noise=True, random_samples=200)
     #logger.info("Length of training set {}".format(len(ldr.train)))
     #logger.info("Length of validation set {}".format(len(ldr.val)))
     #logger.info("Output dimension {}".format(ldr.output_dim))
