@@ -164,8 +164,17 @@ class Loader:
         self.class_counts = state[4]
 
 def transform(ecg):
-    scale = random.uniform(0.1, 5.0)
+    # Amplitude invariance
+    scale = random.uniform(0.2, 2.0)
+
+    # Lead inversion
     flip = random.choice([-1.0, 1.0])
+
+    # Shifting
+    begin = random.randint(0, 1000)
+    end = -random.randint(0, 1000)
+    ecg = ecg[begin:end]
+
     return  ecg * flip * scale
 
 def load_all_data(data_path, val_frac):
@@ -218,7 +227,7 @@ def main():
 
     random.seed(2016)
     ldr = Loader(data_path, batch_size)
-    logger.info("Length of training set {}".format(len(ldr.train)))
+    logger.info("Length of training set {}".format(len(list(ldr.train))))
     logger.info("Length of validation set {}".format(len(ldr.val)))
     logger.info("Output dimension {}".format(ldr.output_dim))
 
