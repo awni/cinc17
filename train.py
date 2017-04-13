@@ -92,7 +92,8 @@ def main(argv=None):
     data_loader = loader.Loader(config['data']['path'],
                     config['model']['batch_size'],
                     seed=config['data']['seed'],
-                    augment=config['data'].get('augment', False))
+                    augment=config['data'].get('augment', False),
+                    random_noise=config['data'].get('random_noise', False))
 
     model = network.Network(is_verbose)
 
