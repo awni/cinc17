@@ -53,10 +53,7 @@ def run_validation(model, data_loader, session, summarizer):
         losses.append(loss)
     loss = np.mean(losses)
     acc = skm.accuracy_score(labels, predictions)
-    mac_f1 = skm.precision_recall_fscore_support(
-                        labels,
-                        predictions,
-                        average='macro')[2]
+    mac_f1 = utils.cinc_score(labels, predictions)
     summary = utils.make_summary("Dev Accuracy", float(acc))
     summarizer.add_summary(summary, global_step=it)
     summary = utils.make_summary("Dev Loss", float(loss))

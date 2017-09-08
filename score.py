@@ -7,8 +7,10 @@ import logging
 
 import loader
 import evaler
+import utils
 
 logger = logging.getLogger("Score")
+
 
 def print_scores(labels, predictions, classes):
     accuracy = skm.accuracy_score(labels, predictions)
@@ -16,13 +18,10 @@ def print_scores(labels, predictions, classes):
                 labels, predictions,
                 target_names=classes,
                 digits=3)
-    macro_scores = skm.precision_recall_fscore_support(
-                        labels,
-                        predictions,
-                        average='macro')
+    macro_score = utils.cinc_score(labels, predictions)
     logger.info("Accuracy {:.3f}".format(accuracy))
     logger.info("\n"+report)
-    logger.info("Macro Average F1: {:.3f}".format(macro_scores[2]))
+    logger.info("Macro Average F1: {:.3f}".format(macro_score))
 
 def load_model(model_path, is_verbose, batch_size):
 
